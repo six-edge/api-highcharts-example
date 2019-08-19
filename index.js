@@ -7,16 +7,15 @@
  */
 
 /**
- * Renders a table
+ * Renders table rows
  * 
  * @param {array} data 
  * @param {string} id 
  */
-const renderTable = function(data, id) {
-    const html = data.reduce((output, value) => {
+const renderTable = (data, id) => {
+    return document.getElementById(id).innerHTML = data.reduce((output, value) => {
         return output + `<tr><td>${value[0]}</td><td>${value[1]}</td></tr>`
     }, '')
-    document.getElementById(id).innerHTML = html;
 }
 
 /**
@@ -25,16 +24,14 @@ const renderTable = function(data, id) {
  * @param {string} content
  * @param {string} id 
  */
-const renderHTML = function(content, id) {
-    document.getElementById(id).innerHTML = content
-}
+const renderHTML = (content, id) => document.getElementById(id).innerHTML = content
 
 /**
  * Parse the response data from the API into a format that highcharts accepts
  * 
  * @param {array} data 
  */
-const parseData = function(data) {
+const parseData = (data) => {
     return data.map((value) => [moment(value[0], 'YYYY-MM-DD').valueOf(), value[1]])
 }
 
@@ -45,7 +42,7 @@ const parseData = function(data) {
  * @param {string} id 
  */
 const renderChart = function(data, id) {
-    Highcharts.chart(id, {
+    return Highcharts.chart(id, {
         title: {
             text: 'Bitcoin Historical Price'
         },
