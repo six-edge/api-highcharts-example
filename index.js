@@ -7,22 +7,61 @@
  */
 
 /**
+ * Renders a table
+ * 
+ * @param {array} data 
+ * @param {string} id 
+ */
+const renderTable = function(data, id) {
+    const html = data.reduce((output, value) => {
+        return output + `<tr><td>${value[0]}</td><td>${value[1]}</td></tr>`
+    }, '')
+    document.getElementById(id).innerHTML = html;
+}
+
+/**
+ * Renders content as a child of an element with ID
+ * 
+ * @param {string} content
+ * @param {string} id 
+ */
+const renderHTML = function(content, id) {
+    document.getElementById(id).innerHTML = content
+}
+
+/**
  * Parse the response data from the API into a format that highcharts accepts
  * 
  * @param {array} data 
  */
 const parseData = function(data) {
-    return Object.entries(data).map((value) => [moment(value[0], 'YYYY-MM-DD').valueOf(), value[1]])
+    return data.map((value) => [moment(value[0], 'YYYY-MM-DD').valueOf(), value[1]])
 }
 
 /**
- * Renders a table from an array
+ * Renders a HighChart as a child of an element with ID
  * 
- * @param {array} data 
+ * @param {string} data
+ * @param {string} id 
  */
-const renderTable = function(data) {
-    const html = Object.entries(data).reduce((string, value) => string + `<tr><td>${value[0]}</td><td>${value[1]}</td></tr>`, '')
-    document.getElementById('data').innerHTML = html;
+const renderChart = function(data, id) {
+    Highcharts.chart(id, {
+        title: {
+            text: 'Bitcoin Historical Price'
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: {
+            title: {
+                text: 'Price in USD'
+            }
+        },
+        series: [{
+            name: 'Bitcoin (BTC)',
+            data: parseData(data)
+        }],
+    });
 }
 
 /**
@@ -39,11 +78,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Executes if the data is returned successfully
         .then(response => {
             
-            const rawData = response.data['bpi']
-            renderTable(rawData);
-
-            const chartData = parseData(rawData);
-            console.log(chartData);
+            // Turn the object returned by the API into an array
+            const chartData = Object.entries(response.data['bpi'])
+            
+            renderTable(chartData, 'data')
+            renderChart(chartData, 'chart')
+            renderHTML(response.data['disclaimer'], 'disclaimer')
+            renderHTML(response.data['time']['updated'], 'updated')
         })
         
         // Executes if an error occurs if code is not >= 200 && < 300
@@ -53,6 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Always occurs even if there is an error
         .finally(() => {
-            console.log('Done')
+            console.log('Done Rendering')
         }); 
 });

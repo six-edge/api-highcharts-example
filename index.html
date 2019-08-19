@@ -14,6 +14,7 @@
     <!-- Load JavaScript Files -->
     <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
     <script src="https://unpkg.com/moment/min/moment.min.js" defer></script>
+    <script src="https://code.highcharts.com/highcharts.js" defer></script>
     <script src="index.js" defer></script>
 </head>
 <body>
@@ -30,7 +31,7 @@
                 
                 <h2>Data</h2>
 
-                <table class="table table-sm">
+                <table class="table table-sm table-striped">
                     <tbody id="data">
                         <!-- Data will be inserted here -->
                     </tbody>
@@ -44,6 +45,11 @@
 
                 <div id="chart">
                     <!-- Chart will be inserted here -->
+                </div>
+
+                <div class="container">
+                    <p id="updated" class="text-center"></p>
+                    <p id="disclaimer" class="text-center"></p>
                 </div>
 
             </div>
